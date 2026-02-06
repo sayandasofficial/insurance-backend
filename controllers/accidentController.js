@@ -15,7 +15,7 @@ export const submitAccidentReport = async (req, res) => {
     const claimNumber = "CLM-" + uuidv4().slice(0, 8);
 
     const query = `
-      INSERT INTO accident_reports
+      INSERT INTO accidents
       (policy_number, insurance_company, incident_type, incident_datetime, damage_details, remarks, claim_number, claim_status)
       VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
     `;
