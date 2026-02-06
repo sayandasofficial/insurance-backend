@@ -15,12 +15,13 @@ export const submitAccidentReport = async (req, res) => {
     const claimNumber = "CLM-" + uuidv4().slice(0, 8);
 
     const query = `
-      INSERT INTO accidents
+      INSERT INTO accident_reports
       (policy_number, insurance_company, incident_type, incident_datetime, damage_details, remarks, claim_number, claim_status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
+      VALUES ($1,$2,$3,$4,$5,$6,$7,'Pending')
+      RETURNING *
     `;
 
-    await db.execute(query, [
+    const result = await db.query(query, [
       policy_number,
       insurance_company,
       incident_type,
