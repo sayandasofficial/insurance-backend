@@ -8,7 +8,9 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: ["https://your-netlify-site.netlify.app"]
+  origin: ["https://dashing-kringle-454fa8.netlify.app"],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
 }));
 
 app.use(express.json());
