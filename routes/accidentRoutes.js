@@ -3,6 +3,6 @@ import { submitAccidentReport } from "../controllers/accidentController.js";
 
 const router = express.Router();
 
-router.post("/submit-claim", submitAccidentReport);
+router.post("/", submitAccidentReport);
 
 export default router;
