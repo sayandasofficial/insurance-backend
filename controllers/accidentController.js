@@ -1,43 +1,47 @@
-import db from "../config/db.js";
+import { supabase } from "../config/supabaseClient.js";
 import { v4 as uuidv4 } from "uuid";
+
+// ================= SUBMIT CLAIM =================
 
 export const submitAccidentReport = async (req, res) => {
   try {
-    const {
-      policy_number,
-      insurance_company,
-      incident_type,
-      incident_datetime,
-      damage_details,
-      remarks
-    } = req.body;
+    const claim_number = `CLM-${uuidv4().slice(0, 8)}`;
 
-    const claimNumber = "CLM-" + uuidv4().slice(0, 8);
+    const payload = {
+      ...req.body,
+      claim_number,
+      claim_status: "Submitted",
+    };
 
-    const query = `
-      INSERT INTO accident_reports
-      (policy_number, insurance_company, incident_type, incident_datetime, damage_details, remarks, claim_number, claim_status)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,'Pending')
-      RETURNING *
-    `;
+    const { data, error } = await supabase
+      .from("accident_reports")
+      .insert([payload])
+      .select()
+      .single();
 
-    const result = await db.query(query, [
-      policy_number,
-      insurance_company,
-      incident_type,
-      incident_datetime,
-      damage_details,
-      remarks,
-      claimNumber
-    ]);
+    if (error) return res.status(500).json(error);
 
-    res.status(201).json({
-      message: "Claim Submitted Successfully",
-      claimNumber
-    });
+    res.json(data);
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+// ================= GET MARINE POLICIES =================
+
+export const getMarinePolicies = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("marine_policies")
+      .select("policy_number");
+
+    if (error) return res.status(500).json(error);
+
+    res.json(data);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };

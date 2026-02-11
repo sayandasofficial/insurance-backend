@@ -7,16 +7,16 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: ["https://dashing-kringle-454fa8.netlify.app"],
-  methods: ["GET","POST","PUT","DELETE"],
-  credentials: true
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// API Route
-app.use("/api/accidents", accidentRoutes);
+// health route (VERY IMPORTANT FOR RENDER TEST)
+app.get("/", (req, res) => {
+  res.send("Insurance Backend Running");
+});
+
+// register routes
+app.use("/api", accidentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
