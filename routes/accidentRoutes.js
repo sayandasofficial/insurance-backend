@@ -1,15 +1,17 @@
 import express from "express";
 import {
   submitAccidentReport,
-  getMarinePolicies
+  getMarinePolicies,
+  getClaimByNumber,
+  updateClaim
 } from "../controllers/accidentController.js";
 
 const router = express.Router();
 
-// submit claim
 router.post("/accidents", submitAccidentReport);
-
-// dropdown marine policies
 router.get("/marine-policies", getMarinePolicies);
+
+router.get("/claim/:claimNumber", getClaimByNumber);
+router.put("/claim/:claimNumber", updateClaim);
 
 export default router;
